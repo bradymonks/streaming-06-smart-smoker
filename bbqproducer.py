@@ -15,6 +15,7 @@ import sys
 import webbrowser
 import csv
 import time
+from collections import deque
 
 
 
@@ -72,6 +73,8 @@ if __name__ == "__main__":
         # create a csv reader for our comma delimited data
         reader = csv.reader(tasks, delimiter=",")
 
+        # Create the deques for each queue
+        
         for row in reader:
             # read the second, third, and fourth columns of data
             column2 = row[1]
