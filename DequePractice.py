@@ -19,41 +19,44 @@ with open("smoker-temps.csv", "r") as input_file:
     # create a csv reader for our comma delimited data
     reader = csv.reader(tasks, delimiter=",")
 
-    # Skip the first row (header)
+    # Skip the first row which contains column names
     next(reader)
 
     for row in reader:
         # read the second, third, and fourth columns of data
-        column2 = row[1]
-        column3 = row[2]
-        column4 = row[3]
+        column2 = row[1] if row[1] else None
+        column3 = row[2] if row[2] else None
+        column4 = row[3] if row[3] else None
 
-        # Check if the temperature in the SmokerDeque has decreased by more than 15 F
-        if len(SmokerDeque) >= 5:
-            prev_temp = SmokerDeque[-5]
-            temp_diff = float(prev_temp) - float(column2)
-            if temp_diff >= smoker_threshold:
-                print("ALERT: The temperature in the smoker has decreased by more than 15 F in 2.5 min")
+        if column2:
+            # Check if the temperature in the SmokerDeque has decreased by more than 15 F
+            if len(SmokerDeque) >= 5:
+                prev_temp = SmokerDeque[-5]
+                temp_diff = float(prev_temp) - float(column2)
+                if temp_diff >= smoker_threshold:
+                    print("ALERT: The temperature in the smoker has decreased by more than 15 F in 2.5 min")
 
-        # append the data from the second column to the SmokerDeque
-        SmokerDeque.append(column2)
+            # append the data from the second column to the SmokerDeque
+            SmokerDeque.append(column2)
 
-        # Check if the temperature in the FoodAdeque has changed by 1 F or less in 10 min
-        if len(FoodAdeque) >= 20:
-            prev_temp = FoodAdeque[-20]
-            temp_diff = abs(float(column3) - float(prev_temp))
-            if temp_diff <= food_threshold:
-                print("ALERT: The temperature in Food A has changed by 1 F or less in 10 min")
+        if column3:
+            # Check if the temperature in the FoodAdeque has changed by 1 F or less in 10 min
+            if len(FoodAdeque) >= 20:
+                prev_temp = FoodAdeque[-20]
+                temp_diff = abs(float(column3) - float(prev_temp))
+                if temp_diff <= food_threshold:
+                    print("ALERT: The temperature in Food A has changed by 1 F or less in 10 min")
 
-        # append the data from the third column to the FoodAdeque
-        FoodAdeque.append(column3)
+            # append the data from the third column to the FoodAdeque
+            FoodAdeque.append(column3)
 
-        # Check if the temperature in the FoodBdeque has changed by 1 F or less in 10 min
-        if len(FoodBdeque) >= 20:
-            prev_temp = FoodBdeque[-20]
-            temp_diff = abs(float(column4) - float(prev_temp))
-            if temp_diff <= food_threshold:
-                print("ALERT: The temperature in Food B has changed by 1 F or less in 10 min")
+        if column4:
+            # Check if the temperature in the FoodBdeque has changed by 1 F or less in 10 min
+            if len(FoodBdeque) >= 20:
+                prev_temp = FoodBdeque[-20]
+                temp_diff = abs(float(column4) - float(prev_temp))
+                if temp_diff <= food_threshold:
+                    print("ALERT: The temperature in Food B has changed by 1 F or less in 10 min")
 
-        # append the data from the fourth column to the FoodBdeque
-        FoodBdeque.append(column4)
+            # append the data from the fourth column to the FoodBdeque
+            FoodBdeque.append(column4)
