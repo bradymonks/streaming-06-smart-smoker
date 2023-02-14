@@ -74,7 +74,7 @@ if __name__ == "__main__":
         reader = csv.reader(tasks, delimiter=",")
 
         # Create the deques for each queue
-        
+
         for row in reader:
             # read the second, third, and fourth columns of data
             column2 = row[1]
@@ -91,4 +91,4 @@ if __name__ == "__main__":
             send_message("localhost", "02-food-B", column4)
 
             # sleep for a few seconds
-            time.sleep(30)
+            time.sleep(1)
