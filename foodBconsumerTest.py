@@ -13,9 +13,9 @@ def foodB_callback(ch, method, properties, body):
     message = body.decode().strip()
     try:
         # Split the message at the comma
-        time, temp = message.split(',')
+        timestamp, temp = message.split(',')
         # Remove any leading or trailing white space
-        time = time.strip()
+        timestamp = timestamp.strip()
         temp = temp.strip()
         # convert the temperature to type float
         temp = float(temp)
@@ -33,7 +33,7 @@ def foodB_callback(ch, method, properties, body):
         new = q.pop()
         old = q.popleft()
         if abs(new - old) < 1:
-            print("ALERT *** THE FOOD HAS STALLED OUT AT",time, "*** ALERT")
+            print("ALERT *** THE FOOD HAS STALLED OUT AT",timestamp, "*** ALERT")
             print(q)
 
     # Simulate work by sleeping for the number of dots in the message
