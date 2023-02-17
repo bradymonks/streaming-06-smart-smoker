@@ -77,18 +77,24 @@ if __name__ == "__main__":
 
         for row in reader:
             # read the second, third, and fourth columns of data
+            column1 = row[0]
             column2 = row[1]
             column3 = row[2]
             column4 = row[3]
 
+            # create new value with times and temps
+            smoker = column1+","+column2
+            fooda = column1+","+column3
+            foodb = column1+","+column4
+
             # send the data from the second column to 01-smoker
-            send_message("localhost", "01-smoker", column2)
+            send_message("localhost", "01-smoker", smoker)
 
             # send the data from the third column to 02-food-A
-            send_message("localhost", "02-food-A", column3)
+            send_message("localhost", "02-food-A", fooda)
 
             # send the data from the fourth column to 02-food-B
-            send_message("localhost", "02-food-B", column4)
+            send_message("localhost", "02-food-B", foodb)
 
             # sleep for a few seconds
             time.sleep(1)

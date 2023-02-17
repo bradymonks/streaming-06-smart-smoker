@@ -23,23 +23,28 @@ def smoker_callback(ch, method, properties, body):
     # decode the binary message body to a string
     message = body.decode().strip() 
     try:
-        # convert the message string to a float
-        message = float(message)
+        # Split the message at the comma
+        time, temp = message.split(',')
+        # Remove any leading or trailing white space
+        time = time.strip()
+        temp = temp.strip()
+        # convert the temperature to type float
+        temp = float(temp)
     except ValueError:
         # ignore the error and continue the process
         pass
     print(f" [x] Received {body.decode()}")
     
     # Check if the message is type float
-    if isinstance(message, float):
-        q.append(message)
+    if isinstance(temp, float):
+        q.append(temp)
 
     # Check the deque
     if len(q) == 5:
         new = q.pop()
         old = q.popleft()
         if old - new > 15:
-            print("ALERT *** THE SMOKER HAS STALLED OUT *** ALERT")
+            print("ALERT *** THE SMOKER HAS STALLED OUT AT",time, "*** ALERT")
             print(q)
     
     # simulate work by sleeping for the number of dots in the message
