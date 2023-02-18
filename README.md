@@ -24,3 +24,5 @@ Like I've done the past couple weeks, I set up my producer in VS Code, while I h
 After tinkering with the code forever, I finally got the desired outcome and was able to get the emails sent out with the alerts!
 ![Message Alerts](MessageAlerts.png)
 Each of my consumer scripts had it written in to return the first and last inputs of the deque's so that we can see what the problem was, along with a message that has the timestamp. 
+![RabbitMQ Console](RabbitMQconsole.png)
+As can be seen above, my queues were efficiently taking in the messages and processing them immediately. 
