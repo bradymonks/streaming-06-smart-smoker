@@ -16,6 +16,10 @@ The thing that caused me the most troubleshooting issues was incorporating the E
 
 I went with three separate consumers. From there, I added little by little to each. I started with just receiving the temperature, then I sent the time with the temperature so that I could apply the time stamp to the alert. Once I was able to send the proper alerts back to the producer with the correct timestamp, I started working on the email alerts. Like I said, I was struggling to get the tomllib module imported until I found that it might be under a different name. I copied the function into each consumer and triggered it whenever the food/smoker stalled out. For the sake of time, I set sleep to (1) so that I could code more efficiently and troubleshoot quicker. 
 
+# Clear vs. Project Files
+
+While tinkering with the code, I often was stopping the consumers and producer at different times, so my queues would get uneven. I kept my consumer scripts from the last module in as CLEAR files so that I could easily clear the queues before I implement new code with the PROJECT files.
+
 # Screenshots
 
 ![Concurrent Processes](ConcurrentProcesses.png)
