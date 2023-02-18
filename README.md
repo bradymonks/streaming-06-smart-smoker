@@ -1,4 +1,10 @@
+
+
 # streaming-05-getting-started
+
+Brady Monks
+
+February 17th, 2023
 
 This is a culmination of the last few weeks of our course learning about producers and consumers. 
 

@@ -97,4 +97,4 @@ if __name__ == "__main__":
             send_message("localhost", "02-food-B", foodb)
 
             # sleep for a few seconds
-            time.sleep(30)
+            time.sleep(1)
