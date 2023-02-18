@@ -13,6 +13,133 @@ import sys
 import time
 import csv
 from collections import deque
+import subprocess
+
+###
+
+import smtplib
+from email.message import EmailMessage
+import tomli  # requires Python 3.11
+import pprint
+
+
+## Create Email Function
+
+def createAndSendEmailAlert(email_subject: str, email_body: str):
+    print(email_body)
+    print(email_subject)
+    """Read outgoing email info from a TOML config file"""
+
+    with open(".env.toml", "rb") as file_object:
+        secret_dict = tomli.load(file_object)
+    pprint.pprint(secret_dict)
+
+    # basic information
+
+    host = secret_dict["outgoing_email_host"]
+    port = secret_dict["outgoing_email_port"]
+    outemail = secret_dict["outgoing_email_address"]
+    outpwd = secret_dict["outgoing_email_password"]
+
+    # Create an instance of an EmailMessage
+
+    msg = EmailMessage()
+    msg["From"] = secret_dict["outgoing_email_address"]
+    msg["To"] = secret_dict["outgoing_email_address"]
+    msg["Reply-to"] = secret_dict["outgoing_email_address"]
+    email_subject1 = email_subject
+    email_body1 = email_body
+
+    msg["Subject"] = email_subject1
+    msg.set_content(email_body1)
+
+    print("========================================")
+    print(f"Prepared Email Message: ")
+    print("========================================")
+    print()
+    print(f"{str(msg)}")
+    print("========================================")
+    print()
+
+    # Communications can fail, so use:
+
+    # try -   to execute the code
+    # except - when you get an Exception, do something else
+    # finally - clean up regardless
+
+    # Create an instance of an email server, enable debug messages
+
+    server = smtplib.SMTP(host)
+    server.set_debuglevel(2)
+
+    print("========================================")
+    print(f"SMTP server created: {str(server)}")
+    print("========================================")
+    print()
+
+    try:
+        print()
+        server.connect(host, port)  # 465
+        print("========================================")
+        print(f"Connected: {host, port}")
+        print("So far so good - will attempt to start TLS")
+        print("========================================")
+        print()
+
+        server.starttls()
+        print("========================================")
+        print(f"TLS started. Will attempt to login.")
+        print("========================================")
+        print()
+
+        try:
+            server.login(outemail, outpwd)
+            print("========================================")
+            print(f"Successfully logged in as {outemail}.")
+            print("========================================")
+            print()
+
+        except smtplib.SMTPHeloError:
+            print("The server did not reply properly to the HELO greeting.")
+            exit()
+        except smtplib.SMTPAuthenticationError:
+            print("The server did not accept the username/password combination.")
+            exit()
+        except smtplib.SMTPNotSupportedError:
+            print("The AUTH command is not supported by the server.")
+            exit()
+        except smtplib.SMTPException:
+            print("No suitable authentication method was found.")
+            exit()
+        except Exception as e:
+            print(f"Login error. {str(e)}")
+            exit()
+
+        try:
+            server.send_message(msg)
+            print("========================================")
+            print(f"Message sent.")
+            print("========================================")
+            print()
+        except Exception as e:
+            print()
+            print(f"ERROR: {str(e)}")
+        finally:
+            server.quit()
+            print("========================================")
+            print(f"Session terminated.")
+            print("========================================")
+            print()
+
+    # Except if we get an Exception (we call e)
+
+    except ConnectionRefusedError as e:
+        print(f"Error connecting. {str(e)}")
+        print()
+
+    except smtplib.SMTPConnectError as e:
+        print(f"SMTP connect error. {str(e)}")
+        print()
 
 # Define the deque with a max length of 20
 q = deque(maxlen=5)
@@ -44,8 +171,13 @@ def smoker_callback(ch, method, properties, body):
         new = q.pop()
         old = q.popleft()
         if old - new > 15:
-            print("ALERT *** THE SMOKER HAS STALLED OUT AT",timestamp, "*** ALERT")
-            print(q)
+            alert = "ALERT *** THE SMOKER HAS STALLED OUT AT"+str(timestamp)+ "*** ALERT"
+            print(new, old)
+            subject_str = "SMOKER ALERT"
+            content_str = alert
+            createAndSendEmailAlert(email_subject=subject_str, email_body=content_str)
+
+
     
     # simulate work by sleeping for the number of dots in the message
     time.sleep(body.count(b"."))
